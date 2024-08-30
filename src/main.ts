@@ -57,3 +57,5 @@ if (env.NODE_ENV !== "test") {
         console.log(`[${new Date().toISOString()}] RESTful API  is listening on port ${port}`)
     })
 }
+
+export default app
