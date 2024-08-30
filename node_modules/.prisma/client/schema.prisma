@@ -1,0 +1,218 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  ADMIN
+  USER
+}
+
+enum ConfigurationType {
+  GAMING
+  OFFICE
+  WORK
+  HIGH_END
+  DEFAULT
+}
+
+enum ComputerType {
+  DESKTOP
+  LAPTOP
+}
+
+enum ComponentType {
+  MOTHERBOARD
+  PROCESSOR
+  GPU
+  RAM
+  STORAGE
+  POWERSUPPLY
+  PCCASE
+}
+
+// Done
+model Session {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  userId    String
+  userType  UserType
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Done ?? Mozno sa budu pridavat nejake metody
+model Component {
+  id            String        @id @default(uuid())
+  name          String
+  componentType ComponentType
+  price         Float
+  manufacturer  String
+  imageUrl      String
+  motherboard   Motherboard?
+  processor     Processor?
+  gpu           GPU?
+  ram           RAM?
+  storage       Storage?
+  powerSupply   PowerSupply?
+  pcCase        PCCase?
+  deletedAt     DateTime?
+}
+
+// Done
+model User {
+  id                       String                  @id @default(uuid())
+  username                 String
+  email                    String                  @unique
+  password                 String
+  userType                 UserType                @default(USER)
+  userconfigurations       PCConfiguration[]
+  partialUserConfiguration ParcialPCConfiguration?
+  sessions                 Session[]
+}
+
+// Done
+model Motherboard {
+  id             String                   @id @default(uuid())
+  socket         String
+  formFactor     String
+  ramSlots       Int
+  ramType        String
+  gpuInterface   String
+  stroageBusType String
+  componentId    String                   @unique
+  component      Component                @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  configurations PCConfiguration[]
+  partial        ParcialPCConfiguration[]
+  deletedAt      DateTime?
+}
+
+// Done
+model Processor {
+  id             String                   @id @default(uuid())
+  architecture   String
+  cores          Int
+  threads        Int
+  bits           Int
+  socket         String
+  componentId    String                   @unique
+  component      Component                @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  configurations PCConfiguration[]
+  partial        ParcialPCConfiguration[]
+  deletedAt      DateTime?
+}
+
+// Done
+model GPU {
+  id             String                   @id @default(uuid())
+  memory         Int
+  powerConnector String
+  interface      String
+  power          Int
+  componentId    String                   @unique
+  component      Component                @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  configurations PCConfiguration[]
+  partial        ParcialPCConfiguration[]
+  deletedAt      DateTime?
+}
+
+// Done
+model RAM {
+  id             String                   @id @default(uuid())
+  memoryType     String
+  capacity       Int
+  computerType   ComputerType
+  componentId    String                   @unique
+  component      Component                @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  configurations PCConfiguration[]
+  partial        ParcialPCConfiguration[]
+  deletedAt      DateTime?
+}
+
+// Done
+model Storage {
+  id             String                   @id @default(uuid())
+  storageType    String
+  capacity       Int
+  busType        String
+  componentId    String                   @unique
+  component      Component                @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  configurations PCConfiguration[]
+  partial        ParcialPCConfiguration[]
+  deletedAt      DateTime?
+}
+
+// Done
+model PowerSupply {
+  id             String                   @id @default(uuid())
+  powerOutput    Int
+  efficiency     String
+  formFactor     String
+  componentId    String                   @unique
+  component      Component                @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  configurations PCConfiguration[]
+  partial        ParcialPCConfiguration[]
+  deletedAt      DateTime?
+}
+
+// Done
+model PCCase {
+  id             String                   @id @default(uuid())
+  formFactor     String
+  componentId    String                   @unique
+  component      Component                @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  configurations PCConfiguration[]
+  partial        ParcialPCConfiguration[]
+  deletedAt      DateTime?
+}
+
+// Done
+model ParcialPCConfiguration {
+  id                String            @id @default(uuid())
+  configurationType ConfigurationType
+  motherboardId     String?
+  motherboard       Motherboard?      @relation(fields: [motherboardId], references: [id], onDelete: Cascade)
+  processorId       String?
+  processor         Processor?        @relation(fields: [processorId], references: [id], onDelete: Cascade)
+  rams              RAM[]
+  gpuId             String?
+  gpu               GPU?              @relation(fields: [gpuId], references: [id], onDelete: Cascade)
+  storages          Storage[]
+  powerSupplyId     String?
+  powerSupply       PowerSupply?      @relation(fields: [powerSupplyId], references: [id], onDelete: Cascade)
+  pcCaseId          String?
+  pcCase            PCCase?           @relation(fields: [pcCaseId], references: [id], onDelete: Cascade)
+  userId            String            @unique
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @default(now())
+  deletedAt         DateTime?
+}
+
+// Done
+model PCConfiguration {
+  id                String            @id @default(uuid())
+  totalPrice        Float
+  configurationType ConfigurationType
+  motherboardId     String
+  motherboard       Motherboard       @relation(fields: [motherboardId], references: [id], onDelete: Cascade)
+  processorId       String
+  processor         Processor         @relation(fields: [processorId], references: [id], onDelete: Cascade)
+  rams              RAM[]
+  gpuId             String
+  gpu               GPU               @relation(fields: [gpuId], references: [id], onDelete: Cascade)
+  storages          Storage[]
+  powerSupplyId     String
+  powerSupply       PowerSupply       @relation(fields: [powerSupplyId], references: [id], onDelete: Cascade)
+  pcCaseId          String
+  pcCase            PCCase            @relation(fields: [pcCaseId], references: [id], onDelete: Cascade)
+  userId            String
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @default(now())
+  deletedAt         DateTime?
+}
