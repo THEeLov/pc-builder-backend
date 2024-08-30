@@ -25,7 +25,7 @@ app.use(cookieParser())
 // CORS middleware
 app.use(
     cors({
-        origin: "https://pc-builder-backend-rho.vercel.app",
+        origin: "https://pc-builder-frontend-psi.vercel.app",
         credentials: true,
     }),
 )
