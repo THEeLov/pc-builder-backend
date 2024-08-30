@@ -25,7 +25,7 @@ app.use(cookieParser())
 // CORS middleware
 app.use(
     cors({
-        origin: "http://localhost:4200",
+        origin: "https://pc-builder-frontend-psi.vercel.app/",
         credentials: true,
     }),
 )
