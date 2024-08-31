@@ -1,3 +1,3 @@
-import main from "../src/main"
+import app from "../src/main"
 
-export default main;
+export default app; 
