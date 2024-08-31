@@ -12,10 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sessionNotExpired = sessionNotExpired;
-exports.authorizeWithConfigId = authorizeWithConfigId;
-exports.authorizeAdmin = authorizeAdmin;
-exports.authorize = authorize;
+exports.authorize = exports.authorizeAdmin = exports.authorizeWithConfigId = exports.sessionNotExpired = void 0;
 const InternalError_1 = __importDefault(require("./errors/InternalError"));
 const ConflictError_1 = __importDefault(require("./errors/ConflictError"));
 const NotFoundError_1 = __importDefault(require("./errors/NotFoundError"));
@@ -37,6 +34,7 @@ const handleError = (error, message) => {
 function sessionNotExpired(session) {
     return session.expiresAt > new Date();
 }
+exports.sessionNotExpired = sessionNotExpired;
 function authorizeWithConfigId(configId, sessionId) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!sessionId) {
@@ -53,6 +51,7 @@ function authorizeWithConfigId(configId, sessionId) {
         return config.value.userId === session.value.userId;
     });
 }
+exports.authorizeWithConfigId = authorizeWithConfigId;
 function authorizeAdmin(sessionId) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!sessionId) {
@@ -68,6 +67,7 @@ function authorizeAdmin(sessionId) {
         return false;
     });
 }
+exports.authorizeAdmin = authorizeAdmin;
 function authorize(userId, sessionId) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!sessionId) {
@@ -83,4 +83,5 @@ function authorize(userId, sessionId) {
         return false;
     });
 }
+exports.authorize = authorize;
 exports.default = handleError;

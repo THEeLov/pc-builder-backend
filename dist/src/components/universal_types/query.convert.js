@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.convertConfig = convertConfig;
-exports.convertConfigurationToQueryType = convertConfigurationToQueryType;
+exports.convertConfigurationToQueryType = exports.convertConfig = void 0;
 function convertConfig(config) {
     var _a, _b, _c, _d, _e;
     const returnObj = {
@@ -15,6 +14,7 @@ function convertConfig(config) {
     };
     return returnObj;
 }
+exports.convertConfig = convertConfig;
 function convertConfigurationToQueryType(configuration) {
     const query = {
         socket: undefined,
@@ -55,3 +55,4 @@ function convertConfigurationToQueryType(configuration) {
     }
     return query;
 }
+exports.convertConfigurationToQueryType = convertConfigurationToQueryType;

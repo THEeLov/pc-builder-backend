@@ -77,8 +77,8 @@ function getSingle(repo, req, res) {
     });
 }
 function create(Create, repo, req, res) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        var _a;
         req.body.component = convertComponent(req.body.component);
         if (!req.body.component) {
             return res.status(400).json(BadRequest_1.default);

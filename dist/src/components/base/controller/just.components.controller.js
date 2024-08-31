@@ -12,8 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.remove = remove;
-exports.getMany = getMany;
+exports.getMany = exports.remove = void 0;
 const validation_1 = require("../../../base/validation/validation");
 const components_repository_1 = __importDefault(require("../repository/components.repository"));
 const InternalError_1 = __importDefault(require("../../../errors/InternalError"));
@@ -35,6 +34,7 @@ function remove(req, res) {
         return res.status(200).json();
     });
 }
+exports.remove = remove;
 function getMany(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield components_repository_1.default.getMany(req.query);
@@ -46,3 +46,4 @@ function getMany(req, res) {
         }));
     });
 }
+exports.getMany = getMany;
