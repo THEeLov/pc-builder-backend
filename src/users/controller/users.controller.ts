@@ -24,12 +24,7 @@ async function register(req: Request, res: Response): Promise<Response<UserDTO>>
         if (!session.isOk) {
             return res.status(400).json(session.isErr ? session.error : new Error("internal error"))
         }
-        const formattedExpirationDate = session.value.expiresAt.toUTCString()
-        res.set("Access-Control-Allow-Credentials", "true")
-        res.set(
-            "Set-Cookie",
-            `sessionId=${session.value.id}; Path=/; SameSite=Strict; Expires=${formattedExpirationDate}`,
-        )
+        res.cookie('sessionId', session.value.id, { httpOnly: true, maxAge: session.value.expiresAt.getTime() - new Date().getTime() });
         return res.status(200).json({
             id: result.value.id,
             username: result.value.username,
@@ -56,12 +51,8 @@ async function login(req: Request, res: Response): Promise<Response<UserDTO | Er
             if (!session.isOk) {
                 return res.status(400).json(session.isErr ? session.error : new Error("internal error"))
             }
-            const formattedExpirationDate = session.value.expiresAt.toUTCString()
-            res.set("Access-Control-Allow-Credentials", "true")
-            res.set(
-                "Set-Cookie",
-                `sessionId=${session.value.id}; Path=/; SameSite=Strict; Expires=${formattedExpirationDate}`,
-            )
+
+            res.cookie('sessionId', session.value.id, { httpOnly: true, maxAge: session.value.expiresAt.getTime() - new Date().getTime() });
             return res.status(200).json({
                 id: user.value.id,
                 username: user.value.username,
@@ -143,8 +134,7 @@ async function logout(req: Request, res: Response): Promise<Response<void>> {
     if (!params.success || !(await authorize(params.data.id, req.cookies.sessionId))) {
         return res.status(401).json()
     }
-    res.set("Access-Control-Allow-Credentials", "true")
-    res.set("Set-Cookie", "session=; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT")
+    res.clearCookie("sessionId")
     SessionsRepository.remove(req.cookies.sessionId)
     return res.status(200).json()
 }
