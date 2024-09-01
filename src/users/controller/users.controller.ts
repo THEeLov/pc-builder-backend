@@ -24,7 +24,7 @@ async function register(req: Request, res: Response): Promise<Response<UserDTO>>
         if (!session.isOk) {
             return res.status(400).json(session.isErr ? session.error : new Error("internal error"))
         }
-        res.cookie('sessionId', session.value.id, { httpOnly: true, maxAge: session.value.expiresAt.getTime() - new Date().getTime() });
+        res.cookie('sessionId', session.value.id, { httpOnly: true, maxAge: session.value.expiresAt.getTime() - new Date().getTime(), path: '/', sameSite: 'none', secure: true });
         return res.status(200).json({
             id: result.value.id,
             username: result.value.username,
@@ -52,7 +52,7 @@ async function login(req: Request, res: Response): Promise<Response<UserDTO | Er
                 return res.status(400).json(session.isErr ? session.error : new Error("internal error"))
             }
 
-            res.cookie('sessionId', session.value.id, { httpOnly: true, maxAge: session.value.expiresAt.getTime() - new Date().getTime() });
+            res.cookie('sessionId', session.value.id, { httpOnly: true, maxAge: session.value.expiresAt.getTime() - new Date().getTime(), path: '/', sameSite: 'none', secure: true });
             return res.status(200).json({
                 id: user.value.id,
                 username: user.value.username,
